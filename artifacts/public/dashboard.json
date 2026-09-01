@@ -1,0 +1,576 @@
+{
+  "generated_at": "2026-09-01T12:27:21.298384+00:00",
+  "paper_trading_only": true,
+  "validation": "Paper and synthetic results are not evidence of live profitability.",
+  "summary": {
+    "latest_equity": 100000.0,
+    "decision_count": 2,
+    "execution_count": 2,
+    "last_reconciliation_matched": null
+  },
+  "accounts": [
+    {
+      "id": 1,
+      "created_at": "2026-09-01T14:00:00-04:00",
+      "account_id": "paper-36c84069",
+      "equity": 100000.0,
+      "payload": {
+        "account_id": "paper-36c84069",
+        "equity": 100000.0,
+        "cash": 100000.0,
+        "buying_power": 200000.0,
+        "options_buying_power": 100000.0,
+        "status": "ACTIVE",
+        "captured_at": "2026-09-01T14:00:00-04:00"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "cycle_id": "7cb6befb9ba672ec095c7ec6",
+      "created_at": "2026-09-01T12:27:21.255046+00:00",
+      "underlying": "QQQ",
+      "action": "buy_spread",
+      "reason": "All deterministic gates passed; order prepared",
+      "payload": {
+        "cycle_id": "7cb6befb9ba672ec095c7ec6",
+        "timestamp": "2026-09-01T12:27:21.255046Z",
+        "underlying": "QQQ",
+        "regime": {
+          "regime": "bullish",
+          "close": 506.99987907714416,
+          "ema_fast": 506.5611447419204,
+          "ema_slow": 505.86688683751703,
+          "vwap": 503.6954811816691,
+          "rsi": 67.649600716111,
+          "realized_volatility": 0.10337017045168023,
+          "reasons": [
+            "close=507.00 vs vwap=503.70",
+            "ema9=506.56 vs ema21=505.87",
+            "rsi14=67.6",
+            "annualized_realized_vol=10.34%"
+          ]
+        },
+        "candidates": [
+          {
+            "underlying": "QQQ",
+            "strategy": "bull_call_debit_spread",
+            "expiry": "2026-09-15",
+            "option_type": "call",
+            "long_contract": {
+              "symbol": "QQQ260915C00500000",
+              "underlying": "QQQ",
+              "expiry": "2026-09-15",
+              "strike": 500.0,
+              "option_type": "call",
+              "bid": 4.98,
+              "ask": 5.02,
+              "delta": 0.45,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "short_contract": {
+              "symbol": "QQQ260915C00505000",
+              "underlying": "QQQ",
+              "expiry": "2026-09-15",
+              "strike": 505.0,
+              "option_type": "call",
+              "bid": 3.73,
+              "ask": 3.77,
+              "delta": 0.3,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "limit_debit": 1.29,
+            "quote_width_ratio": 0.06399999999999935,
+            "score": 0.7960000000000006
+          },
+          {
+            "underlying": "QQQ",
+            "strategy": "bull_call_debit_spread",
+            "expiry": "2026-09-15",
+            "option_type": "call",
+            "long_contract": {
+              "symbol": "QQQ260915C00505000",
+              "underlying": "QQQ",
+              "expiry": "2026-09-15",
+              "strike": 505.0,
+              "option_type": "call",
+              "bid": 3.73,
+              "ask": 3.77,
+              "delta": 0.3,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "short_contract": {
+              "symbol": "QQQ260915C00510000",
+              "underlying": "QQQ",
+              "expiry": "2026-09-15",
+              "strike": 510.0,
+              "option_type": "call",
+              "bid": 2.48,
+              "ask": 2.52,
+              "delta": 0.2,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "limit_debit": 1.29,
+            "quote_width_ratio": 0.06400000000000006,
+            "score": 0.6459999999999999
+          }
+        ],
+        "selected_spread": {
+          "underlying": "QQQ",
+          "strategy": "bull_call_debit_spread",
+          "expiry": "2026-09-15",
+          "option_type": "call",
+          "long_contract": {
+            "symbol": "QQQ260915C00500000",
+            "underlying": "QQQ",
+            "expiry": "2026-09-15",
+            "strike": 500.0,
+            "option_type": "call",
+            "bid": 4.98,
+            "ask": 5.02,
+            "delta": 0.45,
+            "quote_timestamp": "2026-09-01T14:00:00-04:00",
+            "tradable": true
+          },
+          "short_contract": {
+            "symbol": "QQQ260915C00505000",
+            "underlying": "QQQ",
+            "expiry": "2026-09-15",
+            "strike": 505.0,
+            "option_type": "call",
+            "bid": 3.73,
+            "ask": 3.77,
+            "delta": 0.3,
+            "quote_timestamp": "2026-09-01T14:00:00-04:00",
+            "tradable": true
+          },
+          "limit_debit": 1.29,
+          "quote_width_ratio": 0.06399999999999935,
+          "score": 0.7960000000000006
+        },
+        "ranker": {
+          "selected_index": 0,
+          "thesis": "Bullish regime supports bull_call_debit_spread.",
+          "confidence": 0.7092000000000002,
+          "evidence": [
+            "close=507.00 vs vwap=503.70",
+            "ema9=506.56 vs ema21=505.87",
+            "rsi14=67.6",
+            "annualized_realized_vol=10.34%"
+          ],
+          "invalidation": "Regime becomes neutral/opposite or the spread fails liquidity gates.",
+          "source": "rule"
+        },
+        "critic": {
+          "approved": true,
+          "reasons": [
+            "Structure valid"
+          ]
+        },
+        "risk_state": {
+          "equity": 100000.0,
+          "session_start_equity": 100000.0,
+          "daily_drawdown": 0.0,
+          "aggregate_open_risk": 0.0,
+          "open_positions": 0,
+          "kill_switch": false,
+          "checks": [
+            {
+              "name": "paper_mode",
+              "passed": true,
+              "detail": "Only paper trading is allowed"
+            },
+            {
+              "name": "kill_switch",
+              "passed": true,
+              "detail": "KILL_SWITCH must be false"
+            },
+            {
+              "name": "cli_reconciliation",
+              "passed": true,
+              "detail": "SDK and CLI snapshots must agree"
+            },
+            {
+              "name": "entry_cutoff",
+              "passed": true,
+              "detail": "market_time=14:00, cutoff=15:30"
+            },
+            {
+              "name": "daily_drawdown",
+              "passed": true,
+              "detail": "drawdown=0.00%, limit=1.50%"
+            },
+            {
+              "name": "position_count",
+              "passed": true,
+              "detail": "open=0, limit=3"
+            },
+            {
+              "name": "quote_freshness",
+              "passed": true,
+              "detail": "age=0.0s, max=60s"
+            },
+            {
+              "name": "quote_width",
+              "passed": true,
+              "detail": "ratio=6.40%, max=15.00%"
+            },
+            {
+              "name": "one_trade_per_day",
+              "passed": true,
+              "detail": "underlying=QQQ"
+            },
+            {
+              "name": "cooldown",
+              "passed": true,
+              "detail": "minimum=30 minutes"
+            },
+            {
+              "name": "position_size",
+              "passed": true,
+              "detail": "risk_cap=$500.00, per_contract=$129.00"
+            },
+            {
+              "name": "aggregate_risk",
+              "passed": true,
+              "detail": "after_trade=$387.00, limit=$1500.00"
+            },
+            {
+              "name": "buying_power",
+              "passed": true,
+              "detail": "required=$387.00, available=$100000.00"
+            }
+          ]
+        },
+        "action": "buy_spread",
+        "reason": "All deterministic gates passed; order prepared",
+        "order_intent": {
+          "cycle_id": "7cb6befb9ba672ec095c7ec6",
+          "underlying": "QQQ",
+          "strategy": "bull_call_debit_spread",
+          "expiry": "2026-09-15",
+          "legs": [
+            {
+              "symbol": "QQQ260915C00500000",
+              "side": "buy",
+              "position_intent": "buy_to_open",
+              "strike": 500.0
+            },
+            {
+              "symbol": "QQQ260915C00505000",
+              "side": "sell",
+              "position_intent": "sell_to_open",
+              "strike": 505.0
+            }
+          ],
+          "quantity": 3,
+          "limit_debit": 1.29,
+          "maximum_loss": 387.0,
+          "take_profit_pct": 0.4,
+          "stop_loss_pct": -0.3,
+          "client_order_id": "aegis-ff640aae08139d9049dc84f7"
+        }
+      }
+    },
+    {
+      "cycle_id": "6c753410132bb5884a3bf987",
+      "created_at": "2026-09-01T12:27:21.207261+00:00",
+      "underlying": "SPY",
+      "action": "buy_spread",
+      "reason": "All deterministic gates passed; order prepared",
+      "payload": {
+        "cycle_id": "6c753410132bb5884a3bf987",
+        "timestamp": "2026-09-01T12:27:21.207261Z",
+        "underlying": "SPY",
+        "regime": {
+          "regime": "bullish",
+          "close": 506.99987907714416,
+          "ema_fast": 506.5611447419204,
+          "ema_slow": 505.86688683751703,
+          "vwap": 503.6954811816691,
+          "rsi": 67.649600716111,
+          "realized_volatility": 0.10337017045168023,
+          "reasons": [
+            "close=507.00 vs vwap=503.70",
+            "ema9=506.56 vs ema21=505.87",
+            "rsi14=67.6",
+            "annualized_realized_vol=10.34%"
+          ]
+        },
+        "candidates": [
+          {
+            "underlying": "SPY",
+            "strategy": "bull_call_debit_spread",
+            "expiry": "2026-09-15",
+            "option_type": "call",
+            "long_contract": {
+              "symbol": "SPY260915C00500000",
+              "underlying": "SPY",
+              "expiry": "2026-09-15",
+              "strike": 500.0,
+              "option_type": "call",
+              "bid": 4.98,
+              "ask": 5.02,
+              "delta": 0.45,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "short_contract": {
+              "symbol": "SPY260915C00505000",
+              "underlying": "SPY",
+              "expiry": "2026-09-15",
+              "strike": 505.0,
+              "option_type": "call",
+              "bid": 3.73,
+              "ask": 3.77,
+              "delta": 0.3,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "limit_debit": 1.29,
+            "quote_width_ratio": 0.06399999999999935,
+            "score": 0.7960000000000006
+          },
+          {
+            "underlying": "SPY",
+            "strategy": "bull_call_debit_spread",
+            "expiry": "2026-09-15",
+            "option_type": "call",
+            "long_contract": {
+              "symbol": "SPY260915C00505000",
+              "underlying": "SPY",
+              "expiry": "2026-09-15",
+              "strike": 505.0,
+              "option_type": "call",
+              "bid": 3.73,
+              "ask": 3.77,
+              "delta": 0.3,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "short_contract": {
+              "symbol": "SPY260915C00510000",
+              "underlying": "SPY",
+              "expiry": "2026-09-15",
+              "strike": 510.0,
+              "option_type": "call",
+              "bid": 2.48,
+              "ask": 2.52,
+              "delta": 0.2,
+              "quote_timestamp": "2026-09-01T14:00:00-04:00",
+              "tradable": true
+            },
+            "limit_debit": 1.29,
+            "quote_width_ratio": 0.06400000000000006,
+            "score": 0.6459999999999999
+          }
+        ],
+        "selected_spread": {
+          "underlying": "SPY",
+          "strategy": "bull_call_debit_spread",
+          "expiry": "2026-09-15",
+          "option_type": "call",
+          "long_contract": {
+            "symbol": "SPY260915C00500000",
+            "underlying": "SPY",
+            "expiry": "2026-09-15",
+            "strike": 500.0,
+            "option_type": "call",
+            "bid": 4.98,
+            "ask": 5.02,
+            "delta": 0.45,
+            "quote_timestamp": "2026-09-01T14:00:00-04:00",
+            "tradable": true
+          },
+          "short_contract": {
+            "symbol": "SPY260915C00505000",
+            "underlying": "SPY",
+            "expiry": "2026-09-15",
+            "strike": 505.0,
+            "option_type": "call",
+            "bid": 3.73,
+            "ask": 3.77,
+            "delta": 0.3,
+            "quote_timestamp": "2026-09-01T14:00:00-04:00",
+            "tradable": true
+          },
+          "limit_debit": 1.29,
+          "quote_width_ratio": 0.06399999999999935,
+          "score": 0.7960000000000006
+        },
+        "ranker": {
+          "selected_index": 0,
+          "thesis": "Bullish regime supports bull_call_debit_spread.",
+          "confidence": 0.7092000000000002,
+          "evidence": [
+            "close=507.00 vs vwap=503.70",
+            "ema9=506.56 vs ema21=505.87",
+            "rsi14=67.6",
+            "annualized_realized_vol=10.34%"
+          ],
+          "invalidation": "Regime becomes neutral/opposite or the spread fails liquidity gates.",
+          "source": "rule"
+        },
+        "critic": {
+          "approved": true,
+          "reasons": [
+            "Structure valid"
+          ]
+        },
+        "risk_state": {
+          "equity": 100000.0,
+          "session_start_equity": 100000.0,
+          "daily_drawdown": 0.0,
+          "aggregate_open_risk": 0.0,
+          "open_positions": 0,
+          "kill_switch": false,
+          "checks": [
+            {
+              "name": "paper_mode",
+              "passed": true,
+              "detail": "Only paper trading is allowed"
+            },
+            {
+              "name": "kill_switch",
+              "passed": true,
+              "detail": "KILL_SWITCH must be false"
+            },
+            {
+              "name": "cli_reconciliation",
+              "passed": true,
+              "detail": "SDK and CLI snapshots must agree"
+            },
+            {
+              "name": "entry_cutoff",
+              "passed": true,
+              "detail": "market_time=14:00, cutoff=15:30"
+            },
+            {
+              "name": "daily_drawdown",
+              "passed": true,
+              "detail": "drawdown=0.00%, limit=1.50%"
+            },
+            {
+              "name": "position_count",
+              "passed": true,
+              "detail": "open=0, limit=3"
+            },
+            {
+              "name": "quote_freshness",
+              "passed": true,
+              "detail": "age=0.0s, max=60s"
+            },
+            {
+              "name": "quote_width",
+              "passed": true,
+              "detail": "ratio=6.40%, max=15.00%"
+            },
+            {
+              "name": "one_trade_per_day",
+              "passed": true,
+              "detail": "underlying=SPY"
+            },
+            {
+              "name": "cooldown",
+              "passed": true,
+              "detail": "minimum=30 minutes"
+            },
+            {
+              "name": "position_size",
+              "passed": true,
+              "detail": "risk_cap=$500.00, per_contract=$129.00"
+            },
+            {
+              "name": "aggregate_risk",
+              "passed": true,
+              "detail": "after_trade=$387.00, limit=$1500.00"
+            },
+            {
+              "name": "buying_power",
+              "passed": true,
+              "detail": "required=$387.00, available=$100000.00"
+            }
+          ]
+        },
+        "action": "buy_spread",
+        "reason": "All deterministic gates passed; order prepared",
+        "order_intent": {
+          "cycle_id": "6c753410132bb5884a3bf987",
+          "underlying": "SPY",
+          "strategy": "bull_call_debit_spread",
+          "expiry": "2026-09-15",
+          "legs": [
+            {
+              "symbol": "SPY260915C00500000",
+              "side": "buy",
+              "position_intent": "buy_to_open",
+              "strike": 500.0
+            },
+            {
+              "symbol": "SPY260915C00505000",
+              "side": "sell",
+              "position_intent": "sell_to_open",
+              "strike": 505.0
+            }
+          ],
+          "quantity": 3,
+          "limit_debit": 1.29,
+          "maximum_loss": 387.0,
+          "take_profit_pct": 0.4,
+          "stop_loss_pct": -0.3,
+          "client_order_id": "aegis-b9d38b8390276b4d5d7f85d6"
+        }
+      }
+    }
+  ],
+  "executions": [
+    {
+      "client_order_id": "aegis-ff640aae08139d9049dc84f7",
+      "cycle_id": "7cb6befb9ba672ec095c7ec6",
+      "created_at": "2026-09-01T12:27:21.245177+00:00",
+      "status": "dry_run",
+      "request_id": null,
+      "payload": {
+        "cycle_id": "7cb6befb9ba672ec095c7ec6",
+        "client_order_id": "aegis-ff640aae08139d9049dc84f7",
+        "alpaca_order_id": null,
+        "request_id": null,
+        "status": "dry_run",
+        "submitted_at": "2026-09-01T12:27:21.245177Z",
+        "error": null,
+        "dry_run": true,
+        "raw": {
+          "fake": true,
+          "limit_debit": 1.29
+        }
+      }
+    },
+    {
+      "client_order_id": "aegis-b9d38b8390276b4d5d7f85d6",
+      "cycle_id": "6c753410132bb5884a3bf987",
+      "created_at": "2026-09-01T12:27:21.196293+00:00",
+      "status": "dry_run",
+      "request_id": null,
+      "payload": {
+        "cycle_id": "6c753410132bb5884a3bf987",
+        "client_order_id": "aegis-b9d38b8390276b4d5d7f85d6",
+        "alpaca_order_id": null,
+        "request_id": null,
+        "status": "dry_run",
+        "submitted_at": "2026-09-01T12:27:21.196293Z",
+        "error": null,
+        "dry_run": true,
+        "raw": {
+          "fake": true,
+          "limit_debit": 1.29
+        }
+      }
+    }
+  ],
+  "reconciliations": [],
+  "events": []
+}

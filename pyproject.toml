@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aegis-alpha"
+version = "0.1.0"
+description = "Explainable, fail-closed Alpaca paper-options trading agent"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Aegis Alpha Hackathon Team" }]
+dependencies = [
+  "alpaca-py>=0.42,<1",
+  "pandas>=2.2,<4",
+  "pydantic>=2.8,<3",
+  "python-dotenv>=1.0,<2",
+  "streamlit>=1.37,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<10",
+  "pytest-cov>=5,<8",
+  "ruff>=0.6,<1",
+]
+
+[project.scripts]
+aegis-alpha = "aegis_alpha.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aegis_alpha"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --basetemp=.pytest-tmp"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
