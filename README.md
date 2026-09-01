@@ -70,7 +70,7 @@ A real Alpaca paper lifecycle, CLI authentication, MCP inspection, hosted dashbo
 competition-account P&L require the participant's credentials and are not claimed until
 they are run and recorded.
 
-## Submission package
+## Submission packages
 
 - [PowerPoint deck](artifacts/submission/Aegis_Alpha_Hackathon_Deck.pptx)
 - [Generated cover image](artifacts/submission/aegis-alpha-cover.png)
