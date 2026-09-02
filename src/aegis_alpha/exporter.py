@@ -45,14 +45,36 @@ def build_public_snapshot(store: AuditStore) -> dict[str, Any]:
     executions = _decode_rows(store.query_rows("executions", limit=100))
     reconciliations = _decode_rows(store.query_rows("reconciliations", limit=30))
     events = _decode_rows(store.query_rows("events", limit=50))
+    trades = []
+    for row in store.trade_rows(limit=100):
+        item = dict(row)
+        try:
+            intent = json.loads(item.pop("intent"))
+        except (TypeError, json.JSONDecodeError):
+            intent = {}
+        item["strategy"] = intent.get("strategy")
+        item["quantity"] = intent.get("quantity")
+        item["expiry"] = intent.get("expiry")
+        item["legs"] = intent.get("legs", [])
+        trades.append(item)
+    latest_equity = float(accounts[0]["equity"]) if accounts else None
+    first_equity = float(accounts[-1]["equity"]) if accounts else None
     snapshot = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "paper_trading_only": True,
         "validation": "Paper and synthetic results are not evidence of live profitability.",
         "summary": {
-            "latest_equity": accounts[0]["equity"] if accounts else None,
+            "latest_equity": latest_equity,
+            "paper_pnl_since_first_snapshot": (
+                round(latest_equity - first_equity, 2)
+                if latest_equity is not None and first_equity is not None
+                else None
+            ),
             "decision_count": len(decisions),
             "execution_count": len(executions),
+            "active_trade_count": sum(
+                trade["status"] in {"pending_open", "open", "closing"} for trade in trades
+            ),
             "last_reconciliation_matched": bool(reconciliations[0]["matched"])
             if reconciliations
             else None,
@@ -62,6 +84,7 @@ def build_public_snapshot(store: AuditStore) -> dict[str, Any]:
         "executions": executions,
         "reconciliations": reconciliations,
         "events": events,
+        "trades": trades,
     }
     return _redact(snapshot)
 

@@ -62,19 +62,42 @@ class AlpacaCLIAdapter:
             cli_orders = self.run_json("order", "list", "--status", "open")
         except CLIUnavailable as exc:
             return ReconciliationResult(matched=False, error=str(exc), differences=(str(exc),))
+        if not isinstance(cli_account, dict):
+            message = "CLI account output must be a JSON object"
+            return ReconciliationResult(matched=False, error=message, differences=(message,))
+        if not isinstance(cli_positions, list) or not all(
+            isinstance(position, dict) for position in cli_positions
+        ):
+            message = "CLI position output must be a JSON array of objects"
+            return ReconciliationResult(matched=False, error=message, differences=(message,))
+        if not isinstance(cli_orders, list) or not all(
+            isinstance(order, dict) for order in cli_orders
+        ):
+            message = "CLI order output must be a JSON array of objects"
+            return ReconciliationResult(matched=False, error=message, differences=(message,))
         differences: list[str] = []
         cli_id = str(cli_account.get("id", ""))
-        if cli_id and cli_id != sdk_account.account_id:
+        if not cli_id:
+            differences.append("CLI account id is missing")
+        elif cli_id != sdk_account.account_id:
             differences.append("account_id differs")
-        cli_equity = float(cli_account.get("equity", 0))
-        if abs(cli_equity - sdk_account.equity) > 1.0:
-            differences.append(f"equity differs: sdk={sdk_account.equity}, cli={cli_equity}")
+        try:
+            cli_equity = float(cli_account["equity"])
+        except (KeyError, TypeError, ValueError):
+            differences.append("CLI account equity is missing or invalid")
+        else:
+            if abs(cli_equity - sdk_account.equity) > 1.0:
+                differences.append(f"equity differs: sdk={sdk_account.equity}, cli={cli_equity}")
         sdk_symbols = {position.symbol for position in sdk_positions if position.quantity != 0}
-        cli_symbols = {
-            str(position.get("symbol"))
-            for position in cli_positions
-            if float(position.get("qty", 0)) != 0
-        }
+        try:
+            cli_symbols = {
+                str(position["symbol"])
+                for position in cli_positions
+                if float(position.get("qty", 0)) != 0
+            }
+        except (KeyError, TypeError, ValueError):
+            differences.append("CLI position fields are missing or invalid")
+            cli_symbols = set()
         if sdk_symbols != cli_symbols:
             differences.append(
                 f"position symbols differ: sdk={sorted(sdk_symbols)}, cli={sorted(cli_symbols)}"

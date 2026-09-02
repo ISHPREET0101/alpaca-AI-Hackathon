@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 from aegis_alpha.models import (
     AccountSnapshot,
@@ -63,7 +63,7 @@ class FakeBrokerGateway:
 
     def get_option_chain(self, symbol: str, now: datetime | None = None) -> list[OptionSnapshot]:
         now = now or self.now
-        expiry = date.today() + timedelta(days=14)
+        expiry = now.date() + timedelta(days=14)
         contracts: list[OptionSnapshot] = []
         for option_type in (OptionType.CALL, OptionType.PUT):
             for offset, delta in [(-5, 0.60), (0, 0.45), (5, 0.30), (10, 0.20)]:

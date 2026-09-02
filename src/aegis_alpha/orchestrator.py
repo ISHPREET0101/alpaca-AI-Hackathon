@@ -71,18 +71,40 @@ class AgentOrchestrator:
             account = self.broker.get_account()
             positions = self.broker.get_positions()
             self.store.record_account(account)
+            position_symbols = {
+                position.symbol for position in positions if position.quantity != 0
+            }
+            opened, partial = self.store.reconcile_pending_trades(position_symbols)
+            for client_order_id in opened:
+                self.store.record_event(
+                    "position_open_confirmed",
+                    {"client_order_id": client_order_id, "source": "pretrade_positions"},
+                )
+            for client_order_id in partial:
+                self.store.record_event(
+                    "partial_spread_fill_halt",
+                    {"client_order_id": client_order_id},
+                    severity="critical",
+                )
+            closed = self.store.reconcile_closing_trades(position_symbols)
+            for client_order_id in closed:
+                self.store.record_event(
+                    "position_close_confirmed",
+                    {"client_order_id": client_order_id, "source": "pretrade_positions"},
+                )
             if (
                 self.settings.competition_account_id
                 and account.account_id != self.settings.competition_account_id
             ):
                 raise RuntimeError("Connected account does not match COMPETITION_ACCOUNT_ID")
             reconciliation = self._reconcile(account, positions)
+            execution_state_safe = reconciliation.matched and not partial
             decisions = [
                 self._run_underlying(
                     symbol,
                     account,
                     positions,
-                    reconciliation.matched,
+                    execution_state_safe,
                     dry_run,
                     now,
                 )

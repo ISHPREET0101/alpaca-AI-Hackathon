@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "validation_scope": "regime_classification_only",
+  "performance_claim": "none",
+  "warning": "This replay validates deterministic signal classification. It does not model option fills, slippage, fees, or strategy P&L.",
+  "input": "fixtures/replay_scenarios.json",
+  "data_sources": [
+    "synthetic_scenario"
+  ],
+  "summary": {
+    "scenario_count": 5,
+    "matched_count": 5,
+    "classification_accuracy": 1.0,
+    "all_matched": true
+  },
+  "results": [
+    {
+      "name": "steady bullish day",
+      "expected": "bullish",
+      "actual": "bullish",
+      "matched": true,
+      "data_source": "synthetic_scenario",
+      "assessment": {
+        "regime": "bullish",
+        "close": 508.8503574591491,
+        "ema_fast": 508.6940899802487,
+        "ema_slow": 508.0126355616005,
+        "vwap": 504.6771078530085,
+        "rsi": 61.005278076770324,
+        "realized_volatility": 0.13249615669390558,
+        "reasons": [
+          "close=508.85 vs vwap=504.68",
+          "ema9=508.69 vs ema21=508.01",
+          "rsi14=61.0",
+          "annualized_realized_vol=13.25%",
+          "ema_separation=0.134%"
+        ]
+      }
+    },
+    {
+      "name": "steady bearish day",
+      "expected": "bearish",
+      "actual": "bearish",
+      "matched": true,
+      "data_source": "synthetic_scenario",
+      "assessment": {
+        "regime": "bearish",
+        "close": 490.3703574591491,
+        "ema_fast": 491.17408994712036,
+        "ema_slow": 491.9310761007211,
+        "vwap": 495.31995811781366,
+        "rsi": 33.46400515725536,
+        "realized_volatility": 0.13488889267345439,
+        "reasons": [
+          "close=490.37 vs vwap=495.32",
+          "ema9=491.17 vs ema21=491.93",
+          "rsi14=33.5",
+          "annualized_realized_vol=13.49%",
+          "ema_separation=0.154%"
+        ]
+      }
+    },
+    {
+      "name": "flat neutral day",
+      "expected": "neutral",
+      "actual": "neutral",
+      "matched": true,
+      "data_source": "synthetic_scenario",
+      "assessment": {
+        "regime": "neutral",
+        "close": 499.97402383060995,
+        "ema_fast": 499.9956059975791,
+        "ema_slow": 499.99812372207725,
+        "vwap": 499.99990219902725,
+        "rsi": 46.87586684524106,
+        "realized_volatility": 0.008911601553134446,
+        "reasons": [
+          "close=499.97 vs vwap=500.00",
+          "ema9=500.00 vs ema21=500.00",
+          "rsi14=46.9",
+          "annualized_realized_vol=0.89%",
+          "ema_separation=0.001%"
+        ]
+      }
+    },
+    {
+      "name": "weak bullish day",
+      "expected": "bullish",
+      "actual": "bullish",
+      "matched": true,
+      "data_source": "synthetic_scenario",
+      "assessment": {
+        "regime": "bullish",
+        "close": 502.92414298365964,
+        "ema_fast": 502.8936359909953,
+        "ema_slow": 502.6690022426109,
+        "vwap": 501.5589381500301,
+        "rsi": 58.641814388863025,
+        "realized_volatility": 0.05331104105275026,
+        "reasons": [
+          "close=502.92 vs vwap=501.56",
+          "ema9=502.89 vs ema21=502.67",
+          "rsi14=58.6",
+          "annualized_realized_vol=5.33%",
+          "ema_separation=0.045%"
+        ]
+      }
+    },
+    {
+      "name": "weak bearish day",
+      "expected": "bearish",
+      "actual": "bearish",
+      "matched": true,
+      "data_source": "synthetic_scenario",
+      "assessment": {
+        "regime": "bearish",
+        "close": 496.76414298365967,
+        "ema_fast": 497.05363597995245,
+        "ema_slow": 497.30848242231775,
+        "vwap": 498.43988823829847,
+        "rsi": 35.625697805996296,
+        "realized_volatility": 0.05362999709481117,
+        "reasons": [
+          "close=496.76 vs vwap=498.44",
+          "ema9=497.05 vs ema21=497.31",
+          "rsi14=35.6",
+          "annualized_realized_vol=5.36%",
+          "ema_separation=0.051%"
+        ]
+      }
+    }
+  ]
+}

@@ -19,7 +19,7 @@ from aegis_alpha.exporter import export_public_snapshot
 from aegis_alpha.monitor import PositionMonitor
 from aegis_alpha.orchestrator import AgentOrchestrator
 from aegis_alpha.ranker import RuleBasedRanker, build_ranker
-from aegis_alpha.replay import replay_file
+from aegis_alpha.replay import build_replay_report, write_replay_report
 from aegis_alpha.store import AuditStore
 
 
@@ -118,11 +118,17 @@ def command_demo(settings: Settings) -> int:
     )
     decisions = orchestrator.run_cycle(dry_run=True, now=demo_now)
     output = export_public_snapshot(store, "artifacts/public/dashboard.json")
+    replay_output = write_replay_report(
+        "fixtures/replay_scenarios.json",
+        local_settings,
+        "artifacts/public/replay_report.json",
+    )
     _print(
         {
             "mode": "offline_synthetic_dry_run",
             "decisions": [decision.model_dump(mode="json") for decision in decisions],
             "dashboard_snapshot": str(output),
+            "replay_report": str(replay_output),
         }
     )
     return 0
@@ -173,6 +179,7 @@ def build_parser() -> argparse.ArgumentParser:
     schedule.add_argument("--max-cycles", type=int)
     replay = subparsers.add_parser("replay")
     replay.add_argument("--input", required=True)
+    replay.add_argument("--output", default="artifacts/public/replay_report.json")
     subparsers.add_parser("reconcile")
     export = subparsers.add_parser("export")
     export.add_argument("--output", default="artifacts/public/dashboard.json")
@@ -194,9 +201,10 @@ def main(argv: list[str] | None = None) -> int:
                 settings, arguments.execute, arguments.confirm_paper, arguments.max_cycles
             )
         if arguments.command == "replay":
-            results = replay_file(arguments.input, settings)
-            _print({"results": results, "passed": all(item["matched"] for item in results)})
-            return 0 if all(item["matched"] for item in results) else 1
+            report = build_replay_report(arguments.input, settings)
+            write_replay_report(arguments.input, settings, arguments.output)
+            _print(report)
+            return 0 if report["summary"]["all_matched"] else 1
         if arguments.command == "reconcile":
             store, broker, cli_adapter, _ = _live_components(settings)
             result = cli_adapter.reconcile(broker.get_account(), broker.get_positions())

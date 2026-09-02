@@ -132,6 +132,13 @@ class AuditStore:
                 ),
             )
             if intent and execution.status in {"accepted", "new", "filled", "dry_run"}:
+                trade_status = (
+                    "simulated"
+                    if execution.dry_run
+                    else "open"
+                    if execution.status == "filled"
+                    else "pending_open"
+                )
                 connection.execute(
                     """INSERT OR IGNORE INTO open_trades
                     (client_order_id, underlying, opened_at, entry_debit,
@@ -143,7 +150,7 @@ class AuditStore:
                         execution.submitted_at.isoformat(),
                         intent.limit_debit,
                         intent.maximum_loss,
-                        "simulated" if execution.dry_run else "open",
+                        trade_status,
                         self._json(intent),
                     ),
                 )
@@ -190,7 +197,7 @@ class AuditStore:
         with self.connection() as connection:
             row = connection.execute(
                 """SELECT COUNT(*) AS count, COALESCE(SUM(risk_dollars), 0) AS risk
-                FROM open_trades WHERE status = 'open'"""
+                FROM open_trades WHERE status IN ('pending_open', 'open', 'closing')"""
             ).fetchone()
         return int(row["count"]), float(row["risk"])
 
@@ -210,6 +217,61 @@ class AuditStore:
                 "UPDATE open_trades SET status = 'closed' WHERE client_order_id = ?",
                 (client_order_id,),
             )
+
+    def mark_trade_closing(self, client_order_id: str) -> None:
+        with self.connection() as connection:
+            connection.execute(
+                "UPDATE open_trades SET status = 'closing' WHERE client_order_id = ?",
+                (client_order_id,),
+            )
+
+    def reconcile_pending_trades(
+        self, position_symbols: set[str]
+    ) -> tuple[list[str], list[str]]:
+        """Promote fully present spreads; identify dangerous one-leg partial fills."""
+        with self.connection() as connection:
+            rows = connection.execute(
+                "SELECT client_order_id, intent FROM open_trades WHERE status = 'pending_open'"
+            ).fetchall()
+            opened: list[str] = []
+            partial: list[str] = []
+            for row in rows:
+                intent = OrderIntent.model_validate_json(row["intent"])
+                present = sum(leg.symbol in position_symbols for leg in intent.legs)
+                if present == len(intent.legs):
+                    connection.execute(
+                        "UPDATE open_trades SET status = 'open' WHERE client_order_id = ?",
+                        (row["client_order_id"],),
+                    )
+                    opened.append(str(row["client_order_id"]))
+                elif present:
+                    partial.append(str(row["client_order_id"]))
+        return opened, partial
+
+    def reconcile_closing_trades(self, position_symbols: set[str]) -> list[str]:
+        """Close pending records only after neither option leg remains at the broker."""
+        with self.connection() as connection:
+            rows = connection.execute(
+                "SELECT client_order_id, intent FROM open_trades WHERE status = 'closing'"
+            ).fetchall()
+            closed: list[str] = []
+            for row in rows:
+                intent = OrderIntent.model_validate_json(row["intent"])
+                if not any(leg.symbol in position_symbols for leg in intent.legs):
+                    connection.execute(
+                        "UPDATE open_trades SET status = 'closed' WHERE client_order_id = ?",
+                        (row["client_order_id"],),
+                    )
+                    closed.append(str(row["client_order_id"]))
+        return closed
+
+    def trade_status(self, client_order_id: str) -> str | None:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT status FROM open_trades WHERE client_order_id = ?",
+                (client_order_id,),
+            ).fetchone()
+        return str(row["status"]) if row else None
 
     def traded_underlying_today(self, underlying: str, iso_date: str) -> bool:
         with self.connection() as connection:
@@ -256,5 +318,12 @@ class AuditStore:
             rows = connection.execute(
                 f"SELECT * FROM {table} ORDER BY created_at DESC LIMIT ?",
                 (limit,),  # noqa: S608
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def trade_rows(self, limit: int = 100) -> list[dict[str, Any]]:
+        with self.connection() as connection:
+            rows = connection.execute(
+                "SELECT * FROM open_trades ORDER BY opened_at DESC LIMIT ?", (limit,)
             ).fetchall()
         return [dict(row) for row in rows]

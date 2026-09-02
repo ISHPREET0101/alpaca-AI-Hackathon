@@ -56,15 +56,20 @@ Alpaca market data
 | `aegis-alpha cycle --dry-run` | Evaluate current Alpaca data without submitting. |
 | `aegis-alpha cycle --execute` | Submit only after explicit paper-account setup. |
 | `aegis-alpha schedule --dry-run` | Run guarded five-minute cycles. |
-| `aegis-alpha replay --input PATH` | Replay JSON market-day fixtures. |
+| `aegis-alpha replay --input PATH` | Replay market bars or synthetic safety fixtures and export an evidence report. |
 | `aegis-alpha reconcile` | Compare SDK and CLI account/position/order views. |
 | `aegis-alpha export` | Write a credential-free dashboard snapshot. |
 
 ## Current validation boundary
 
-As of September 1, 2026, 28 tests pass, one credential-gated paper integration test is
-skipped, all five synthetic replay regimes pass, and measured coverage is 72%. The
+As of September 2, 2026, 38 tests pass, one credential-gated paper integration test is
+skipped, all five synthetic replay regimes pass, and measured coverage is 74%. The
 dashboard has also been smoke-tested locally from a sanitized export.
+
+Accepted entry and exit orders remain `pending_open` or `closing` until broker positions
+confirm their lifecycle. Those states continue to consume the risk budget, and a one-leg
+partial fill is logged as a critical event. Replay accuracy is signal-classification
+evidence only; it is never presented as options P&L.
 
 A real Alpaca paper lifecycle, CLI authentication, MCP inspection, hosted dashboard, and
 competition-account P&L require the participant's credentials and are not claimed until

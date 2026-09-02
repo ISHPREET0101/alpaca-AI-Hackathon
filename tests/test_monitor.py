@@ -37,6 +37,8 @@ def test_monitor_forces_end_of_day_exit(settings, store, candidate, market_now) 
     assert len(exits) == 1
     assert exits[0].client_order_id == f"{intent.client_order_id}-close"
     assert store.list_open_trades() == []
+    assert store.trade_status(intent.client_order_id) == "closing"
+    assert store.open_trade_summary() == (1, intent.maximum_loss)
 
 
 def test_monitor_keeps_flat_pnl_position_before_cutoff(
@@ -48,3 +50,29 @@ def test_monitor_keeps_flat_pnl_position_before_cutoff(
     exits = PositionMonitor(settings, broker, store).run(dry_run=False, now=market_now)
 
     assert exits == []
+
+
+def test_monitor_exits_when_bullish_signal_is_invalidated(
+    settings, store, candidate, market_now
+) -> None:
+    intent = _open_trade(store, candidate, market_now)
+    broker = FakeBrokerGateway(False, market_now)
+
+    exits = PositionMonitor(settings, broker, store).run(dry_run=False, now=market_now)
+
+    assert len(exits) == 1
+    assert store.trade_status(intent.client_order_id) == "closing"
+
+
+def test_monitor_confirms_close_only_after_positions_disappear(
+    settings, store, candidate, market_now
+) -> None:
+    intent = _open_trade(store, candidate, market_now)
+    store.mark_trade_closing(intent.client_order_id)
+    broker = FakeBrokerGateway(True, market_now)
+
+    exits = PositionMonitor(settings, broker, store).run(dry_run=False, now=market_now)
+
+    assert exits == []
+    assert store.trade_status(intent.client_order_id) == "closed"
+    assert store.open_trade_summary() == (0, 0.0)
