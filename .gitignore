@@ -16,4 +16,7 @@ data/*.db
 data/*.db-*
 data/private/
 artifacts/private/
+artifacts/submission/deck-render/
+artifacts/submission/aegis-alpha-deck-montage.webp
+.codex-finalizer/
 .streamlit/secrets.toml

@@ -192,7 +192,7 @@ def main() -> None:
         Spacer(1, 4 * mm),
         *section(
             "Verification status",
-            "<b>Locally verified:</b> 28 tests passed, 5 synthetic market regimes replayed, 72% measured code coverage, dry-run submission lock, idempotency, forced exits, malformed-AI failure, sanitized export, and multi-leg request construction. <b>Credential-gated:</b> one paper integration test is skipped until Alpaca credentials exist; no filled trade or paper P&amp;L is claimed.",
+            "<b>Locally verified:</b> 38 tests passed, 5 synthetic market regimes replayed, 74% measured code coverage, dry-run submission lock, idempotency, forced exits, malformed-AI failure, sanitized export, and multi-leg request construction. <b>Credential-gated:</b> one paper integration test is skipped until Alpaca credentials exist; no filled trade or paper P&amp;L is claimed.",
             custom,
         ),
         *section(

@@ -262,11 +262,11 @@ async function main() {
     const s = deck.slides.add();
     s.background.fill = C.white;
     header(s, "Offline verified; broker proof is still pending", "Evidence", 7);
-    addText(s, "28", 57, 196, 240, 90, 64, { bold: true, color: C.blue });
+    addText(s, "38", 57, 196, 240, 90, 64, { bold: true, color: C.blue });
     addText(s, "tests passed", 57, 282, 260, 42, 24, { bold: true });
     addText(s, "5", 430, 196, 240, 90, 64, { bold: true, color: C.blue });
     addText(s, "replay regimes passed", 430, 282, 300, 42, 24, { bold: true });
-    addText(s, "72%", 810, 196, 260, 90, 64, { bold: true, color: C.blue });
+    addText(s, "74%", 810, 196, 260, 90, 64, { bold: true, color: C.blue });
     addText(s, "measured code coverage", 810, 282, 340, 42, 24, { bold: true });
     addRule(s, 57, 365, 1090, C.rule, 1);
     addText(s, "Verified locally", 57, 402, 260, 34, 18, { color: C.green, bold: true });
@@ -315,8 +315,46 @@ async function main() {
   }
   const montage = await deck.export({ format: "webp", montage: true, scale: 1 });
   await fs.writeFile(path.join(OUT, "aegis-alpha-deck-montage.webp"), new Uint8Array(await montage.arrayBuffer()));
+  const stagingDir = path.resolve(".codex-finalizer");
+  await fs.mkdir(stagingDir, { recursive: true });
+  const candidatePath = path.join(stagingDir, "Aegis_Alpha_Hackathon_Deck_candidate.pptx");
+  const finalPath = path.join(OUT, "Aegis_Alpha_Hackathon_Deck_Final.pptx");
   const pptx = await PresentationFile.exportPptx(deck);
-  await pptx.save(path.join(OUT, "Aegis_Alpha_Hackathon_Deck.pptx"));
+  await pptx.save(candidatePath);
+
+  const skillDir = process.env.SKILL_DIR;
+  if (!skillDir || !path.isAbsolute(skillDir)) {
+    throw new Error("SKILL_DIR must be an absolute path");
+  }
+  const { finalizePresentation } = await import(
+    pathToFileURL(path.join(skillDir, "container_tools/artifact_tool_utils.mjs")).href,
+  );
+  await finalizePresentation({
+    workspaceDir: path.resolve("."),
+    candidatePath,
+    finalPath,
+    pythonExecutable: process.env.RUNTIME_PYTHON,
+    integrityValidatorPath: path.join(
+      skillDir,
+      "container_tools/inspect_presentation_package_integrity.py",
+    ),
+    layoutValidatorPath: path.join(
+      skillDir,
+      "container_tools/inspect_presentation_layout_geometry.py",
+    ),
+    layoutArgs: [
+      "--expected-slide-size-emu",
+      "12192000,6858000",
+      "--validate-bullet-geometry",
+      "--validate-heading-fit",
+    ],
+    explicitTotalSlideCount: 8,
+    requiredNativeTableOwnerSlides: [],
+    requiredNativeChartOwnerSlides: [],
+    fontPolicy: { basis: "design", families: ["Arial"] },
+    verifyArtifactToolImport: true,
+    receiptPath: path.join(stagingDir, "Aegis_Alpha_Hackathon_Deck_Final.validation.json"),
+  });
 }
 
 main().catch((error) => {

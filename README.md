@@ -77,7 +77,8 @@ they are run and recorded.
 
 ## Submission packages
 
-- [PowerPoint deck](artifacts/submission/Aegis_Alpha_Hackathon_Deck.pptx)
+- [Final PowerPoint deck](artifacts/submission/Aegis_Alpha_Hackathon_Deck_Final.pptx)
+- [Presentation PDF](output/pdf/Aegis_Alpha_Hackathon_Deck.pdf)
 - [Generated cover image](artifacts/submission/aegis-alpha-cover.png)
 - [One-page technical write-up](output/pdf/Aegis_Alpha_Technical_Writeup.pdf)
 - [Submission copy](docs/SUBMISSION_DRAFT.md)
