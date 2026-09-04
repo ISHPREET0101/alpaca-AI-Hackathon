@@ -37,10 +37,9 @@ Pydantic, pandas, SQLite, Streamlit, AI Agents, Options, FinTech.
 ## Required values to complete manually
 
 - Public GitHub URL:
-- Hosted Streamlit URL:
+- Hosted Streamlit URL: https://aegis-alpha-hackathon.streamlit.app/
 - Video URL:
 - Slide deck URL/file:
 - Fresh $100,000 Alpaca paper account ID:
 - Final paper P&L and measurement timestamp:
 - Social links:
-

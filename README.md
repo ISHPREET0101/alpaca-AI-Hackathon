@@ -9,6 +9,8 @@ trading.
 > **Paper trading only.** This project is educational software, not investment advice.
 > Paper results do not represent live-market performance.
 
+**Public dashboard:** https://aegis-alpha-hackathon.streamlit.app/
+
 ## Safety contract
 
 - Live endpoints and `ALPACA_LIVE_TRADE=true` are rejected at startup.
